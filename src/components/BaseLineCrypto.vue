@@ -44,7 +44,7 @@ useIntersectionObserver(chartElement, ([{ isIntersecting }]) => {
     <div class="flex w-20 pl-2 pr-2 items-center">
       <img
         v-if="item.image"
-        :src="item.image"
+        v-lazy="item.image"
         class="w-8 h-8 border-round rounded-full"
       />
       <Spinner v-else color="#DDD" size="small" class="inline-block mx-auto" />

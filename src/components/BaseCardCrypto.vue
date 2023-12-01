@@ -11,6 +11,7 @@ import {
 } from "@/app.organizer";
 import useCurrencySymbol from "@/composables/useCurrencySymbol";
 import {useI18n} from "vue-i18n";
+import PriceDisplayer from "@/components/BaseCardParts/PriceDisplayer.vue";
 
 
 // TODO - replace with item instead
@@ -105,7 +106,7 @@ const orderedSparkLabels = computed(() => {
       >
 <!--         TODO - inline styles-->
         <div
-            class="flex col-span-10 lg:col-span-2 justify-center lg:justify-start items-center lg:p-2 lg:pr-4  font-bold text-5xl stroke-black a-1 d-600 fadeIn"
+            class="flex col-span-10 lg:col-span-2 justify-center lg:justify-start items-center lg:p-2 lg:pr-4 font-bold text-5xl stroke-black a-1 d-600 fadeIn"
             style="text-stroke: 2px white;"
         >
           {{
@@ -114,41 +115,30 @@ const orderedSparkLabels = computed(() => {
                 : item.name
           }}
         </div>
-        <div
-            class="flex col-span-10 lg:col-span-1 pl-4 pr-4 items-center justify-center lg:justify-start text-gray-400">
+        <div class="flex col-span-10 lg:col-span-1 pl-4 pr-4 items-center justify-center lg:justify-start text-gray-400">
           [{{ item.symbol }}]
         </div>
         <div class="flex flex-col col-span-10 lg:col-span-3 justify-center lg:justify-start  pl-4 pr-4 text-black">
           <div class="inline text-center lg:text-left">
-            <span class="text-sm font-bold">{{ print("current_price") }}</span>
-            :
-            <template
-                v-if="item.pricesByCurrencies[currencyActive]?.current_price"
-            >
-              {{ item.pricesByCurrencies[currencyActive].current_price }}
-              {{ currencySymbol }}
-            </template>
-            <span v-else class="text-sm border-1 text-gray-300">N/A</span>
+            <PriceDisplayer
+                :label="print('current_price')"
+                :amount="item.pricesByCurrencies[currencyActive]?.current_price || 0"
+                :currency-symbol="currencySymbol"
+            />
           </div>
           <div class="inline text-center lg:text-left">
-            <span class="text-sm font-bold">{{ print("market_cap") }}</span> :
-            <template
-                v-if="item?.pricesByCurrencies[currencyActive]?.market_cap"
-            >
-              {{ item.pricesByCurrencies[currencyActive].market_cap }}
-              {{ currencySymbol }}
-            </template>
-            <span v-else class="text-sm border-1 text-gray-300">N/A</span>
+            <PriceDisplayer
+                :label="print('market_cap')"
+                :amount="item.pricesByCurrencies[currencyActive]?.market_cap || 0"
+                :currency-symbol="currencySymbol"
+            />
           </div>
           <div class="inline text-center lg:text-left">
-            <span class="text-sm font-bold">{{ print("total_volume") }}</span> :
-            <template
-                v-if="item?.pricesByCurrencies[currencyActive]?.total_volume"
-            >
-              {{ item.pricesByCurrencies[currencyActive].total_volume }}
-              {{ currencySymbol }}
-            </template>
-            <span v-else class="text-sm border-1 text-gray-300">N/A</span>
+            <PriceDisplayer
+                :label="print('total_volume')"
+                :amount="item.pricesByCurrencies[currencyActive]?.total_volume || 0"
+                :currency-symbol="currencySymbol"
+            />
           </div>
         </div>
         <div class="flex items-center justify-center lg:justify-start">

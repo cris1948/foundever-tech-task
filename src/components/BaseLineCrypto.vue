@@ -8,6 +8,7 @@ import { useIntersectionObserver } from "@vueuse/core";
 import useCurrencySymbol from "@/composables/useCurrencySymbol";
 
 import { ROUTE_CRYPTO_VIEW } from "@/app.routes";
+import PriceDisplayer from "@/components/BaseCardParts/PriceDisplayer.vue";
 
 const props = defineProps({
   item: {
@@ -100,28 +101,22 @@ const orderedSparkLabels = computed(() => {
       }}
     </div>
     <div class="flex pl-4 pr-4 w-44 items-center text-black dark:text-white">
-      <template
-        v-if="item.pricesByCurrencies[currencyActive]?.current_price"
-      >
-        {{ item.pricesByCurrencies[currencyActive].current_price }}
-        {{ currencySymbol }}
-      </template>
-      <div v-else class="text-sm border-1 text-gray-300">N/A</div>
+      <PriceDisplayer
+          :amount="item.pricesByCurrencies[currencyActive]?.current_price || 0"
+          :currency-symbol="currencySymbol"
+      />
     </div>
     <div class="flex pl-4 pr-4 w-36 items-center text-black dark:text-white">
-      <template v-if="item?.pricesByCurrencies[currencyActive]?.market_cap">
-        {{ item.pricesByCurrencies[currencyActive].market_cap }}
-        {{ currencySymbol }}
-      </template>
-      <div v-else class="text-sm border-1 text-gray-300">N/A</div>
+      <PriceDisplayer
+          :amount="item.pricesByCurrencies[currencyActive]?.market_cap || 0"
+          :currency-symbol="currencySymbol"
+      />
     </div>
     <div class="flex pl-4 pr-4 w-40 items-center text-black dark:text-white">
-      <!--TODO - use Intl.Format  -->
-      <template v-if="item?.pricesByCurrencies[currencyActive]?.total_volume">
-        {{ item.pricesByCurrencies[currencyActive].total_volume }}
-        {{ currencySymbol }}
-      </template>
-      <div v-else class="text-sm border-1 text-gray-300">N/A</div>
+      <PriceDisplayer
+          :amount="item.pricesByCurrencies[currencyActive]?.total_volume || 0"
+          :currency-symbol="currencySymbol"
+      />
     </div>
     <div
       class="flex flex-1 w-200 items-center text-black dark:text-white pr-3"

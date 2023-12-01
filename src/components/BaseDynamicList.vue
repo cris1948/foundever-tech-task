@@ -41,15 +41,18 @@ const dynamicSorter = ref({} as TDynamicSort);
 const dynamicWatcher = computed(() => props.watcher);
 
 
-// TODO - well looks ugly; what it does?
 const filteredList = computed(() => {
   const filters = Object.entries(dynamicFilters.value)
-  if (!filters.length) return Array.from(props.items).map(([_, value]) => value)
-  return Array.from(props.items).map(([_, value]) => value).filter((item, index) => {
+  if (!filters.length) {
+    return Array.from(props.items.values())
+  }
+  return Array.from(props.items.values()).filter((item, index) => {
     for (let [ref, { indexes, values }] of filters) {
       for (let index of indexes) {
         for (let value of values) {
-          if (item[index].toLowerCase().includes(value.toLowerCase())) return true
+          if (item[index].toLowerCase().includes(value.toLowerCase())) {
+            return true
+          }
         }
       }
     }
@@ -75,7 +78,6 @@ const orderedList = computed<TCryptoData[]>(() => {
 let timeoutUpdateFilters: NodeJS.Timeout;
 
 
-// TODO - check why this timeout is needed here
 const onUpdateFilters = ({
   ref,
   indexes,
@@ -123,7 +125,7 @@ useInfiniteScroll(
   () => {
     blocCurrent.value++;
   },
-  { distance: 200 }
+  { distance: 350 }
 );
 
 onMounted(() => {

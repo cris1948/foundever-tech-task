@@ -31,9 +31,9 @@ const updateSorter = (sortName: string) => {
   let order: "asc" | "desc" =
     alreadyActiveSorter && lastSorter.value.order === "asc" ? "desc" : "asc";
   if (["name"].includes(sortName)) sorter = sorterCharactere(sortName);
-  else if (["market_cap", "current_price", "total_volume"].includes(sortName))
+  else if (["marketCap", "currentPrice", "totalVolume"].includes(sortName))
     sorter = sorterPrices(currencyActive, sortName);
-  else if (["sparkline_in_7d"].includes(sortName)) sorter = sorterSparkline7days(currencyActive, sortName)
+  else if (["sparklineIn7d"].includes(sortName)) sorter = sorterSparkline7days(currencyActive, sortName)
   else sorter = null;
 
   if (sorter) {
@@ -74,25 +74,25 @@ onMounted(() => {
     </div>
     <div
       class="flex pl-4 pr-4 w-36 items-center align-center text-gray-600 dark:text-white font-bold cursor-pointer"
-      @click="(event) => updateSorter('current_price')"
+      @click="(event) => updateSorter('currentPrice')"
     >
       {{ print("current_price") }}
     </div>
     <div
       class="flex pl-4 pr-4 w-36 items-center align-center text-gray-600 dark:text-white font-bold cursor-pointer"
-      @click="(event) => updateSorter('market_cap')"
+      @click="(event) => updateSorter('marketCap')"
     >
       {{ print("market_cap") }}
     </div>
     <div
       class="flex pl-4 pr-4 w-36 items-center align-center text-gray-600 dark:text-white font-bold cursor-pointer"
-      @click="(event) => updateSorter('total_volume')"
+      @click="(event) => updateSorter('totalVolume')"
     >
       {{ print("total_volume") }}
     </div>
     <div
       class="flex flex-1 w-300 items-center align-center justify-center text-gray-600 dark:text-white font-bold cursor-pointer"
-      @click="(event) => updateSorter('sparkline_in_7d')"
+      @click="(event) => updateSorter('sparklineIn7d')"
     >
       {{ print("last_7_day") }}
     </div>

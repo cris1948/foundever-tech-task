@@ -3,7 +3,6 @@ import {
   ref,
   computed,
   inject,
-  DefineComponent,
   onMounted,
   watch,
   Ref,
@@ -34,7 +33,6 @@ const App = inject<IAppProvider>("App");
 const props = defineProps<{
   title: string;
   cryptoList: Map<string, TCryptoData>;
-  component: DefineComponent<any, any, any>;
 }>();
 
 const { t: print } = useI18n();
@@ -46,6 +44,7 @@ const {
   isReadyCategories,
   isReadyCurrencies,
   isReadyCryptoList,
+  itemsByPage
 } = storeToRefs(cryptoStore);
 
 const { fetchCryptosInfos, setCurrencyActive } = cryptoStore;
@@ -53,18 +52,16 @@ const isReadyCryptoStore = computed(
   () => isReadyCategories.value && isReadyCurrencies.value && isReadyCryptoList.value
 );
 
-// TODO - should be unified with per_page from store?
-const itemsByPage = 25;
 const dynamicController = ref() as Ref<typeof BaseDynamicList>;
 const refInputFilter = ref() as Ref<typeof BaseInputFilter>;
 
-const updatePricesForList = ({ newList, oldList }: TEventLists) => {
-  const toUpdatePricesList = newList.filter((e) => {
-    if (!e.pricesByCurrencies[currencyActive.value]) return true;
-    return !oldList.find((f) => e.id === f.id);
+const updatePricesForList = async ({ newList, oldList }: TEventLists) => {
+  const oldListIds = oldList.map(o => o.id);
+  const toUpdatePricesList = newList.filter((n) => {
+    if (!n.pricesByCurrencies[currencyActive.value]) return true;
+    return !oldListIds.includes(n.id)
   });
-  // TODO - this is executed on mounted (the same request twice)
-  fetchCryptosInfos(toUpdatePricesList);
+  await fetchCryptosInfos(toUpdatePricesList);
 };
 
 const currenciesListOptions = computed(() => {
@@ -84,14 +81,6 @@ watch(
     if (dynamicController) dynamicController.value.onReset();
   }
 );
-
-onMounted(async () => {
-  fetchCryptosInfos(
-    Array.from(props.cryptoList)
-      .map(([key, value]) => value)
-      .slice(0, itemsByPage)
-  );
-});
 </script>
 
 <template>
@@ -127,7 +116,7 @@ onMounted(async () => {
       </div>
       <div class="flex flex-1 mt-1">
         <BaseDynamicSorts
-          class="h-10 pb-1 rounded-r-full shadowshadow a-05 d-200 fadeInDown"
+          class="h-10 pb-1 rounded-r-full shadow a-05 d-200 fadeInDown"
           :controller="dynamicController"
         />
       </div>

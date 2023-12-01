@@ -3,7 +3,6 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useMeta } from "vue-meta";
 import { LayoutDashboard, ViewCryptoList } from "../app.organizer";
-import BaseLineCrypto from '@/components/BaseLineCrypto.vue'
 import { ROUTE_CRYPTO_OVERVIEW, ROUTE_CRYPTO_FAVORITES } from "../app.routes";
 import { useCryptoStore } from "@/stores/crypto";
 import { useI18n } from "vue-i18n";
@@ -21,10 +20,8 @@ const routeIsFavorites = computed(
   () => router.currentRoute.value.name === ROUTE_CRYPTO_FAVORITES.name
 );
 
-// TODO - print? print is misleading
 const { t: print } = useI18n();
 
-// TODO - move to components where it's needed
 const {
   cryptoList,
   cryptoFavorites,
@@ -34,7 +31,6 @@ const viewProps = computed(() => {
   return {
     title: routeIsHome.value ? print('cryptocurrency_prices') : print('cryptocurrency_favorites'),
     cryptoList: routeIsHome.value ? cryptoList : cryptoFavorites,
-    component: BaseLineCrypto,
   }
 })
 
@@ -46,7 +42,7 @@ const viewProps = computed(() => {
       v-if="routeIsHome || routeIsFavorites"
       v-bind="viewProps"
     />
-    <router-view v-else />
+    <router-view />
   </LayoutDashboard>
 </template>
 

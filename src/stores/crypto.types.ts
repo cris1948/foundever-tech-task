@@ -1,5 +1,6 @@
 
 export type TCryptoDefaultStates= {
+  itemsByPage: number;
   cryptoList: Map<string,TCryptoData>
   currenciesList: string[]
   categoriesList: TCategoryData[]
@@ -29,6 +30,7 @@ export type TCryptoData = {
   symbol: string
   image?: string
   category?: string,
+  sparklineIn7d?: number[];
   calculatedSparkline?: false | number[],
   orderedSparkLabels?: string[],
   pricesByCurrencies: {

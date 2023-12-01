@@ -58,19 +58,19 @@ useIntersectionObserver(chartElement, ([{ isIntersecting }]) => {
     </div>
     <div class="flex pl-4 pr-4 w-44 items-center text-black dark:text-white">
       <PriceDisplayer
-          :amount="item.pricesByCurrencies[currencyActive]?.current_price || 0"
+          :amount="item.pricesByCurrencies[currencyActive]?.currentPrice || 0"
           :currency-symbol="currencySymbol"
       />
     </div>
     <div class="flex pl-4 pr-4 w-36 items-center text-black dark:text-white">
       <PriceDisplayer
-          :amount="item.pricesByCurrencies[currencyActive]?.market_cap || 0"
+          :amount="item.pricesByCurrencies[currencyActive]?.marketCap || 0"
           :currency-symbol="currencySymbol"
       />
     </div>
     <div class="flex pl-4 pr-4 w-40 items-center text-black dark:text-white">
       <PriceDisplayer
-          :amount="item.pricesByCurrencies[currencyActive]?.total_volume || 0"
+          :amount="item.pricesByCurrencies[currencyActive]?.totalVolume || 0"
           :currency-symbol="currencySymbol"
       />
     </div>
@@ -84,6 +84,7 @@ useIntersectionObserver(chartElement, ([{ isIntersecting }]) => {
           :labels="item.orderedSparkLabels"
           :grid="false"
           :tooltip="false"
+
           :win="
             item.calculatedSparkline[0] <
             item.calculatedSparkline[item.calculatedSparkline.length - 1]

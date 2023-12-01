@@ -16,6 +16,7 @@ export const useCryptoStore = defineStore({
 
   state: () =>
     ({
+      itemsByPage: 20,
       cryptoList: new Map<string, TCryptoData>(),
       currenciesList: [],
       categoriesList: [],
@@ -64,7 +65,9 @@ export const useCryptoStore = defineStore({
         //DevNote: It's for cache API request for dev and not pay it ...
         const cacheCategories = useLocalStorage.get("temp_categories");
 
-        if (cacheCategories && Object.entries(cacheCategories).length) this.categoriesList = cacheCategories;
+        if (cacheCategories && Object.entries(cacheCategories).length) {
+          this.categoriesList = cacheCategories;
+        }
         else {
           const response = await axios.get(`${URL_API}/coins/categories/list`);
           if (response.data.length)
@@ -99,18 +102,18 @@ export const useCryptoStore = defineStore({
       const requestIds = optimizedList.filter((crypto) =>
         !crypto.pricesByCurrencies[this.currencyActive]
       );
-      // TODO check if we pass only new ids in request
       if (requestIds.length) {
         const ids = requestIds.map((e) => e.id);
 
         const query = {
           ids: ids.join(","),
           vs_currency: this.currencyActive,
-          per_page: 25,
+          per_page: this.itemsByPage,
           include_24h_vol: true,
           include_24hr_change: true,
           include_last_updated_at: true,
           sparkline: true,
+          x_cg_demo_api_key: "CG-tZ24564qzng8dTFMHKCA1bWG"
         };
 
         const response = await axios.get(`${URL_API}/coins/markets`, {
@@ -118,29 +121,27 @@ export const useCryptoStore = defineStore({
         });
 
         if (response.data) {
-          const responseArray: TEntryCryptoData[] = Object.values(
-            response.data
-          );
-          if (responseArray.length) {
-            responseArray.map((value) => {
-              const key = value.id;
-              const item = this.cryptoList.get(key);
-              if (item) {
-                const calculatedSparkline = _calculateSparkline(value.sparkline_in_7d.price);
-                item.image = value.image;
-                item.calculatedSparkline = calculatedSparkline;
-                item.orderedSparkLabels = _orderedSparkLabels(calculatedSparkline || []);
-                item.pricesByCurrencies[this.currencyActive] = {
-                  currentPrice: value.current_price,
-                  marketCap: value.market_cap,
-                  totalVolume: value.total_volume,
-                  priceChange24h: value.price_change_24h,
-                };
-                this.cryptoList.set(key, item);
-                if (this.cryptoFavorites.get(key)) this.cryptoFavorites.set(key, item);
-              }
-            });
+          for (const entryCryptoData of response.data as TEntryCryptoData[]) {
+            const key = entryCryptoData.id;
+            const item = this.cryptoList.get(key);
+            if (item) {
+              const updatedItem = { ...item };
+              const calculatedSparkline = _calculateSparkline(entryCryptoData.sparkline_in_7d.price);
+              updatedItem.image = entryCryptoData.image;
+              updatedItem.calculatedSparkline = calculatedSparkline;
+              updatedItem.sparklineIn7d = entryCryptoData.sparkline_in_7d.price;
+              updatedItem.orderedSparkLabels = _orderedSparkLabels(calculatedSparkline || []);
+              updatedItem.pricesByCurrencies[this.currencyActive] = {
+                currentPrice: entryCryptoData.current_price,
+                marketCap: entryCryptoData.market_cap,
+                totalVolume: entryCryptoData.total_volume,
+                priceChange24h: entryCryptoData.price_change_24h,
+              };
+              this.cryptoList.set(key, updatedItem);
+              if (this.cryptoFavorites.get(key)) this.cryptoFavorites.set(key, updatedItem);
+            }
           }
+
         }
       }
     },

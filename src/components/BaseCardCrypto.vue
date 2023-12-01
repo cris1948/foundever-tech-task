@@ -24,12 +24,11 @@ const props = defineProps({
 
 const cryptoStore = useCryptoStore();
 
-const {currencyActive, cryptoFavorites, currenciesList, cryptoList} =
+const {currencyActive, currenciesList} =
     storeToRefs(cryptoStore);
 
-const {setCurrencyActive, isInFavorites, toggleFavorite} = cryptoStore;
+const { setCurrencyActive } = cryptoStore;
 
-// const crypto = ref(cryptoList.value.get(props.itemId) as TCryptoData)
 const currencySymbol = computed(() => useCurrencySymbol(currencyActive.value));
 const chartElement = ref();
 
@@ -41,28 +40,6 @@ const currenciesListOptions = computed(() => {
       value: c,
       label: c,
     };
-  });
-});
-
-// TODO - calculated sparkline is duplicated: BaseLineCrypto.vue
-const calculatedSparkline = computed(() => {
-  if (!props.item.sparkline_in_7d?.length) return false;
-  const toReduce = props.item.sparkline_in_7d;
-  const reduced = toReduce.reduce((acc, val, index) => {
-    if (index && index % 23 === 0) acc.push(val);
-    return acc;
-  }, new Array<number>());
-
-  return reduced.length > 3 ? reduced : false;
-});
-
-// TODO - calculated sparkline is duplicated: BaseLineCrypto.vue
-const orderedSparkLabels = computed(() => {
-  if (!calculatedSparkline.value) return [];
-  return calculatedSparkline.value.map((_, index: number) => {
-    if (calculatedSparkline.value) {
-      return "J-" + (index - calculatedSparkline.value.length);
-    } else return "";
   });
 });
 </script>
@@ -86,7 +63,7 @@ const orderedSparkLabels = computed(() => {
       <div
           class="col-span-8 grid grid-cols-1 lg:grid-cols-10 items-center gradient mt-4 lg:mt-0 a-05 fadeInDown rounded-r"
       >
-<!--         TODO - inline styles-->
+        <!--         TODO - inline styles-->
         <div
             class="flex col-span-10 lg:col-span-2 justify-center lg:justify-start items-center lg:p-2 lg:pr-4 font-bold text-5xl stroke-black a-1 d-600 fadeIn"
             style="text-stroke: 2px white;"
@@ -97,7 +74,8 @@ const orderedSparkLabels = computed(() => {
                 : item.name
           }}
         </div>
-        <div class="flex col-span-10 lg:col-span-1 pl-4 pr-4 items-center justify-center lg:justify-start text-gray-400">
+        <div
+            class="flex col-span-10 lg:col-span-1 pl-4 pr-4 items-center justify-center lg:justify-start text-gray-400">
           [{{ item.symbol }}]
         </div>
         <div class="flex flex-col col-span-10 lg:col-span-3 justify-center lg:justify-start  pl-4 pr-4 text-black">
@@ -135,31 +113,26 @@ const orderedSparkLabels = computed(() => {
         <div
             class="flex col-span-10 lg:col-span-2 items-center justify-center lg:justify-end pb-4 lg:pr-3 lg:pr-10"
         >
-          <div class="flex items-center" @click.prevent.stop="toggleFavorite(item.id)">
-            <FavoriteStar :active="isInFavorites" class="pr"/>
-            <span
-                class="pl-1 text-xs cursor-pointer"
-                :class="[(isInFavorites(item.id) ? 'text-gray-400 capitalize' : 'hover:underline')]"
-            >
-              {{ isInFavorites(item.id) ? print('favorite') : print('add_to_favorites') }}
-            </span>
+          <div class="flex items-center">
+            <FavoriteStar :itemId="item.id" :activeLabel="print('favorite')" :label="print('add_to_favorites')"
+                          class="pr"/>
           </div>
         </div>
       </div>
     </div>
     <div
         class="flex flex-1 w-200 items-center text-black dark:text-white lg:pr-3 mt-10"
-        :ref="(ref) => (chartElement = ref)"
+        ref="chartElement"
     >
-      <template v-if="calculatedSparkline">
+      <template v-if="item.calculatedSparkline">
         <BaseCryptoChart
-            :sparkline="calculatedSparkline"
-            :labels="orderedSparkLabels"
+            :sparkline="item.calculatedSparkline"
+            :labels="item.orderedSparkLabels"
             :animation="true"
             :tooltip="true"
             :win="
-            calculatedSparkline[0] <
-            calculatedSparkline[calculatedSparkline.length - 1]
+            item.calculatedSparkline[0] <
+            item.calculatedSparkline[item.calculatedSparkline.length - 1]
           "
         />
       </template>

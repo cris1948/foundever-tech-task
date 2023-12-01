@@ -127,8 +127,10 @@ export const useCryptoStore = defineStore({
               const key = value.id;
               const item = this.cryptoList.get(key);
               if (item) {
+                const calculatedSparkline = _calculateSparkline(value.sparkline_in_7d.price);
                 item.image = value.image;
-                item.sparkline_in_7d = value.sparkline_in_7d.price
+                item.calculatedSparkline = calculatedSparkline;
+                item.orderedSparkLabels = _orderedSparkLabels(calculatedSparkline || []);
                 item.pricesByCurrencies[this.currencyActive] = {
                   current_price: value.current_price,
                   market_cap: value.market_cap,
@@ -176,7 +178,6 @@ export const useCryptoStore = defineStore({
   },
 });
 
-
 const _loadFavorites = (): Map<string,TCryptoData> => {
   const favorites: [string, TCryptoData][] = useLocalStorage.get(LOCALSTORAGE_CRYPTO_FAVORITES)
   if (favorites && Object.entries(favorites).length)
@@ -187,3 +188,28 @@ const _loadFavorites = (): Map<string,TCryptoData> => {
   }
   else return new Map();
 }
+
+const _calculateSparkline = (sparklineIn7d: number[]): false | number[] => {
+  if (!sparklineIn7d.length) {
+    return false;
+  }
+  const reduced = sparklineIn7d.reduce((acc, val, index) => {
+    if (index && index % 23 === 0) acc.push(val);
+    return acc;
+  }, new Array<number>());
+
+  return reduced.length > 3 ? reduced : false;
+};
+
+const _orderedSparkLabels = (calculatedSparkline: number[]): string[] => {
+  if (!calculatedSparkline) {
+    return [];
+  }
+  return calculatedSparkline.map((_, index: number) => {
+    if (calculatedSparkline) {
+      return "J" + (index - calculatedSparkline.length);
+    } else {
+      return ""
+    }
+  });
+};

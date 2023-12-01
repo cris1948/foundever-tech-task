@@ -20,7 +20,7 @@ export type TEntryCryptoData = {
   price_change_24h: number,
   sparkline_in_7d: {
     price: number[],
-  }
+  },
 }
 
 export type TCryptoData = {
@@ -29,7 +29,8 @@ export type TCryptoData = {
   symbol: string
   image?: string
   category?: string,
-  sparkline_in_7d?: number[]
+  calculatedSparkline?: false | number[],
+  orderedSparkLabels?: string[],
   pricesByCurrencies: {
     [key: string]: {
       current_price: number

@@ -1,20 +1,24 @@
 <script setup lang="ts">
-import { IAppProvider } from "@/providers/app";
-import { computed, inject } from "vue";
+import {IAppProvider} from "@/providers/app";
+import {computed, inject} from "vue";
+import {useCryptoStore} from "@/stores/crypto";
 
-const props = defineProps<{
-  active: boolean;
-}>();
+const props = defineProps<{ itemId: string; activeLabel?: string; label?: string }>();
 
 const App = inject<IAppProvider>("App");
+const {isInFavorites, toggleFavorite} = useCryptoStore();
+
+const active = computed(() => {
+  return isInFavorites(props.itemId)
+})
 
 const getImageSource = computed(() => {
   try {
     let file = "ico-star-";
-    if (props.active) file += "full";
-    if (!props.active) {
+    if (active.value) file += "full";
+    if (!active.value) {
       file +=
-        App?.theme.value === "dark" ? "empty-dark" : "empty-light";
+          App?.theme.value === "dark" ? "empty-dark" : "empty-light";
     }
     return new URL(`../assets/img/${file}.png`, import.meta.url).href;
   } catch (e) {
@@ -24,5 +28,14 @@ const getImageSource = computed(() => {
 </script>
 
 <template>
-  <img :src="getImageSource" class="w-6 h-6 inline-block cursor-pointer" />
+  <div @click.prevent.stop="toggleFavorite(props.itemId)">
+    <img :src="getImageSource" class="w-6 h-6 inline-block cursor-pointer"/>
+    <span
+        v-if="activeLabel && label"
+        class="pl-1 text-xs cursor-pointer"
+        :class="[(active ? 'text-gray-400 capitalize' : 'hover:underline')]"
+    >
+      {{ active ? props.activeLabel : props.label }}
+    </span>
+  </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref, inject, PropType} from "vue";
+import {computed, ref, PropType} from "vue";
 import { storeToRefs } from "pinia";
 import { TCryptoData } from "@/stores/crypto.types";
 import { useCryptoStore } from "@/stores/crypto";
@@ -18,9 +18,7 @@ const props = defineProps({
 });
 
 const cryptoStore = useCryptoStore();
-
-const { currencyActive, cryptoList, cryptoFavorites } = storeToRefs(cryptoStore);
-const { toggleFavorite, isInFavorites } = cryptoStore;
+const { currencyActive } = storeToRefs(cryptoStore);
 
 const currencySymbol = computed(() => useCurrencySymbol(currencyActive.value));
 
@@ -29,29 +27,6 @@ const chartIsVisible = ref(true);
 
 useIntersectionObserver(chartElement, ([{ isIntersecting }]) => {
   chartIsVisible.value = isIntersecting;
-});
-
-// TODO - calculated sparkline is duplicated: BaseCryptoCard.vue
-const calculatedSparkline = computed(() => {
-  if (!props.item.sparkline_in_7d?.length) return [] as number[];
-
-  const toReduce = props.item.sparkline_in_7d;
-
-  const reduced = toReduce.reduce((acc, val, index) => {
-    if (index && index % 23 === 0) acc.push(val);
-    return acc;
-  }, new Array<number>());
-
-  return reduced.length > 3 ? reduced : [] as number[];
-});
-// TODO - calculated sparkline is duplicated: BaseCryptoCard.vue
-const orderedSparkLabels = computed(() => {
-  if (!calculatedSparkline.value) return [];
-  return calculatedSparkline.value.map((_, index: number) => {
-    if (calculatedSparkline.value) {
-      return "J" + (index - calculatedSparkline.value.length);
-    } else return "";
-  });
 });
 </script>
 
@@ -103,15 +78,15 @@ const orderedSparkLabels = computed(() => {
       class="flex flex-1 w-200 items-center text-black dark:text-white pr-3"
       ref="chartElement"
     >
-      <template v-if="calculatedSparkline && chartIsVisible">
+      <template v-if="item.calculatedSparkline && chartIsVisible">
         <BaseCryptoChart
-          :sparkline="calculatedSparkline"
-          :labels="orderedSparkLabels"
+          :sparkline="item.calculatedSparkline"
+          :labels="item.orderedSparkLabels"
           :grid="false"
           :tooltip="false"
           :win="
-            calculatedSparkline[0] <
-            calculatedSparkline[calculatedSparkline.length - 1]
+            item.calculatedSparkline[0] <
+            item.calculatedSparkline[item.calculatedSparkline.length - 1]
           "
         />
       </template>
@@ -119,9 +94,8 @@ const orderedSparkLabels = computed(() => {
     </div>
     <div
       class="flex w-14 items-center justify-center pr-3 cursor-pointer"
-      @click.prevent.stop="toggleFavorite(item.id)"
     >
-      <FavoriteStar :active="isInFavorites(item.id)" />
+      <FavoriteStar :itemId="item.id" />
     </div>
   </div>
 </template>

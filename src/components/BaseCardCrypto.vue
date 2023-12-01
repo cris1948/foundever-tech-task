@@ -14,7 +14,6 @@ import {useI18n} from "vue-i18n";
 import PriceDisplayer from "@/components/BaseCardParts/PriceDisplayer.vue";
 
 
-// TODO - replace with item instead
 const props = defineProps({
   item: {
     type: Object as PropType<TCryptoData>,

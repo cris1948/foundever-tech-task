@@ -8,7 +8,6 @@ import type {
   TEntryCategoryData,
   TEntryCryptoData,
 } from "./crypto.types";
-import {computed} from "vue";
 
 const URL_API = "https://api.coingecko.com/api/v3";
 
@@ -98,7 +97,7 @@ export const useCryptoStore = defineStore({
 
     async fetchCryptosInfos(optimizedList: TCryptoData[]): Promise<void> {
       const requestIds = optimizedList.filter((crypto) =>
-        !crypto.pricesByCurrencies[this.currencyActive] ? true : false
+        !crypto.pricesByCurrencies[this.currencyActive]
       );
       // TODO check if we pass only new ids in request
       if (requestIds.length) {
@@ -132,10 +131,10 @@ export const useCryptoStore = defineStore({
                 item.calculatedSparkline = calculatedSparkline;
                 item.orderedSparkLabels = _orderedSparkLabels(calculatedSparkline || []);
                 item.pricesByCurrencies[this.currencyActive] = {
-                  current_price: value.current_price,
-                  market_cap: value.market_cap,
-                  total_volume: value.total_volume,
-                  price_change_24h: value.price_change_24h,
+                  currentPrice: value.current_price,
+                  marketCap: value.market_cap,
+                  totalVolume: value.total_volume,
+                  priceChange24h: value.price_change_24h,
                 };
                 this.cryptoList.set(key, item);
                 if (this.cryptoFavorites.get(key)) this.cryptoFavorites.set(key, item);

@@ -33,10 +33,10 @@ export type TCryptoData = {
   orderedSparkLabels?: string[],
   pricesByCurrencies: {
     [key: string]: {
-      current_price: number
-      market_cap: number,
-      total_volume: number,
-      price_change_24h: number,
+      currentPrice: number
+      marketCap: number,
+      totalVolume: number,
+      priceChange24h: number,
     }
   }
 }

@@ -9,8 +9,6 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { ROUTE_CRYPTO_OVERVIEW } from "@/app.routes";
 
-
-const App = inject<IAppProvider>("App");
 const router = useRouter();
 
 const id = router.currentRoute.value.params.id as string;
@@ -25,7 +23,6 @@ const {
 
 const {
   currencyActive,
-  currenciesList,
   cryptoList,
   isReadyCategories,
   isReadyCurrencies,
@@ -59,7 +56,9 @@ const registerItem = () => {
   }
 }
 const fetchItemInfos = () => { 
-  if (item.value) fetchCryptosInfos([item.value])
+  if (item.value) {
+    fetchCryptosInfos([item.value])
+  }
 } 
 
 onMounted(() => {

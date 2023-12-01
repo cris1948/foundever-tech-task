@@ -6,7 +6,6 @@ import { TDynamicSort } from "./BaseDynamicSorts.vue";
 import { useScroll } from '@vueuse/core'
 import { TCryptoData } from "@/stores/crypto.types";
 
-
 export type TParamsUpdateFilters = {
   ref: string,
   indexes: string[],

@@ -2,8 +2,8 @@
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useMeta } from "vue-meta";
-import { LayoutDashboard, ViewCryptoList, BaseLineCrypto } from "../app.organizer";
-
+import { LayoutDashboard, ViewCryptoList } from "../app.organizer";
+import BaseLineCrypto from '@/components/BaseLineCrypto.vue'
 import { ROUTE_CRYPTO_OVERVIEW, ROUTE_CRYPTO_FAVORITES } from "../app.routes";
 import { useCryptoStore } from "@/stores/crypto";
 import { useI18n } from "vue-i18n";

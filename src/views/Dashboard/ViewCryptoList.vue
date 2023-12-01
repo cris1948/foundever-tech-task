@@ -53,7 +53,8 @@ const isReadyCryptoStore = computed(
   () => isReadyCategories.value && isReadyCurrencies.value && isReadyCryptoList.value
 );
 
-const itemsByPage = 150;
+// TODO - should be unified with per_page from store?
+const itemsByPage = 25;
 const dynamicController = ref() as Ref<typeof BaseDynamicList>;
 const refInputFilter = ref() as Ref<typeof BaseInputFilter>;
 
@@ -62,6 +63,7 @@ const updatePricesForList = ({ newList, oldList }: TEventLists) => {
     if (!e.pricesByCurrencies[currencyActive.value]) return true;
     return !oldList.find((f) => e.id === f.id);
   });
+  // TODO - this is executed on mounted (the same request twice)
   fetchCryptosInfos(toUpdatePricesList);
 };
 

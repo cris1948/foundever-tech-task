@@ -42,7 +42,7 @@ const dynamicSorter = ref({} as TDynamicSort);
 const dynamicWatcher = computed(() => props.watcher);
 
 
-
+// TODO - well looks ugly; what it does?
 const filteredList = computed(() => {
   const filters = Object.entries(dynamicFilters.value)
   if (!filters.length) return Array.from(props.items).map(([_, value]) => value)
@@ -75,6 +75,8 @@ const orderedList = computed<TCryptoData[]>(() => {
 
 let timeoutUpdateFilters: NodeJS.Timeout;
 
+
+// TODO - check why this timeout is needed here
 const onUpdateFilters = ({
   ref,
   indexes,
@@ -155,7 +157,7 @@ defineExpose({
         :is="props.component"
         v-for="item in orderedList"
         :key="`${item[props.componentKey]}`"
-        :item-id="item.id"
+        :item="item"
       />
     </template>
   </div>

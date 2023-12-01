@@ -95,13 +95,14 @@ export const useCryptoStore = defineStore({
       const requestIds = optimizedList.filter((crypto) =>
         !crypto.pricesByCurrencies[this.currencyActive] ? true : false
       );
+      // TODO check if we pass only new ids in request
       if (requestIds.length) {
         const ids = requestIds.map((e) => e.id);
 
         const query = {
           ids: ids.join(","),
           vs_currency: this.currencyActive,
-          per_page: 250,
+          per_page: 25,
           include_24h_vol: true,
           include_24hr_change: true,
           include_last_updated_at: true,

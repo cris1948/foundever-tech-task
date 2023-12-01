@@ -21,8 +21,10 @@ const routeIsFavorites = computed(
   () => router.currentRoute.value.name === ROUTE_CRYPTO_FAVORITES.name
 );
 
+// TODO - print? print is misleading
 const { t: print } = useI18n();
 
+// TODO - move to components where it's needed
 const {
   cryptoList,
   cryptoFavorites,

@@ -77,7 +77,7 @@ onMounted(() => {
     {{  isReadyCryptoStore ?'tru' :'false' }}
   </div>
   <div v-else-if="isReadyCryptoStore && item" class="flex flex-1 relative">
-    <BaseCardCrypto :data="item" :item-id="item.id" />
+    <BaseCardCrypto :item="item" />
   </div>
 </template>
 

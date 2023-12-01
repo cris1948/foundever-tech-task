@@ -25,6 +25,9 @@
     fetchCategoriesList()
     fetchCryptoList();
   })
+
+  // TODO - add to favourites from crypto-details-view doesnt work
+  // TODO - unify syntax
 </script>
 
 <template>

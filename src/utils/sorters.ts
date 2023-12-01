@@ -4,6 +4,7 @@ type TSortCharacter = {
   [key: string]: string;
 };
 
+// TODO - fix misspelling
 export const sorterCharactere = (index: string) => {
   return (a: TSortCharacter, b: TSortCharacter): number => {
     if (a[index] < b[index]) {

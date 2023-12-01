@@ -8,6 +8,7 @@ import type {
   TEntryCategoryData,
   TEntryCryptoData,
 } from "./crypto.types";
+import {computed} from "vue";
 
 const URL_API = "https://api.coingecko.com/api/v3";
 
@@ -35,6 +36,10 @@ export const useCryptoStore = defineStore({
     isReadyCryptoList(state: TCryptoDefaultStates) {
       return state.cryptoList.size ? true : false;
     },
+    isInFavorites(state: TCryptoDefaultStates) {
+      return (itemId: string) => (!!state.cryptoFavorites.get(itemId))
+    }
+
   },
 
   actions: {
@@ -137,6 +142,16 @@ export const useCryptoStore = defineStore({
           }
         }
       }
+    },
+
+
+    toggleFavorite(itemId: string){
+      const item = this.cryptoList.get(itemId)
+      if (this.isInFavorites(itemId) && item) {
+        this.removeFavorite(item);
+      } else if (item) {
+        this.addFavorite(item)
+      };
     },
 
     setCurrencyActive(currency: string) {

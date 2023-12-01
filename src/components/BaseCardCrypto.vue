@@ -27,22 +27,13 @@ const cryptoStore = useCryptoStore();
 const {currencyActive, cryptoFavorites, currenciesList, cryptoList} =
     storeToRefs(cryptoStore);
 
-const {setCurrencyActive, addFavorite, removeFavorite} = cryptoStore;
+const {setCurrencyActive, isInFavorites, toggleFavorite} = cryptoStore;
 
 // const crypto = ref(cryptoList.value.get(props.itemId) as TCryptoData)
 const currencySymbol = computed(() => useCurrencySymbol(currencyActive.value));
 const chartElement = ref();
 
 const {t: print} = useI18n();
-
-// TODO - duplicate
-const isInFavorites = computed(() => {
-  if (props.item) {
-    return !!cryptoFavorites.value.get(props.item.id)
-  }
-  return false;
-})
-
 
 const currenciesListOptions = computed(() => {
   return currenciesList.value.map((c) => {
@@ -52,15 +43,6 @@ const currenciesListOptions = computed(() => {
     };
   });
 });
-
-// TODO - duplicate
-const toggleFavorite = () => {
-  if (isInFavorites.value && props.item) {
-    removeFavorite(props.item);
-  } else if (props.item) {
-    addFavorite(props.item)
-  };
-};
 
 // TODO - calculated sparkline is duplicated: BaseLineCrypto.vue
 const calculatedSparkline = computed(() => {
@@ -153,13 +135,13 @@ const orderedSparkLabels = computed(() => {
         <div
             class="flex col-span-10 lg:col-span-2 items-center justify-center lg:justify-end pb-4 lg:pr-3 lg:pr-10"
         >
-          <div class="flex items-center" @click.prevent.stop="toggleFavorite">
+          <div class="flex items-center" @click.prevent.stop="toggleFavorite(item.id)">
             <FavoriteStar :active="isInFavorites" class="pr"/>
             <span
                 class="pl-1 text-xs cursor-pointer"
-                :class="[(isInFavorites ? 'text-gray-400 capitalize' : 'hover:underline')]"
+                :class="[(isInFavorites(item.id) ? 'text-gray-400 capitalize' : 'hover:underline')]"
             >
-              {{ isInFavorites ? print('favorite') : print('add_to_favorites') }}
+              {{ isInFavorites(item.id) ? print('favorite') : print('add_to_favorites') }}
             </span>
           </div>
         </div>

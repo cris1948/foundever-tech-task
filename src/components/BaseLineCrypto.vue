@@ -20,34 +20,15 @@ const props = defineProps({
 const cryptoStore = useCryptoStore();
 
 const { currencyActive, cryptoList, cryptoFavorites } = storeToRefs(cryptoStore);
-const { addFavorite, removeFavorite } = cryptoStore;
-
-// const crypto = ref(cryptoList.value.get(props.itemId) as TCryptoData)
+const { toggleFavorite, isInFavorites } = cryptoStore;
 
 const currencySymbol = computed(() => useCurrencySymbol(currencyActive.value));
 
 const chartElement = ref();
 const chartIsVisible = ref(true);
 
-
-// TODO - duplicate
-const isInFavorites = computed(() =>
-  props.item ? (cryptoFavorites.value.get(props.item.id) ? true : false): false
-);
-
-// TODO - duplicate
-const toggleFavorite = () => {
-  if (isInFavorites.value && props.item) {
-    removeFavorite(props.item);
-  } else if (props.item) {
-    addFavorite(props.item)
-  };
-};
-
-
-// TODO intersection observer ????
 useIntersectionObserver(chartElement, ([{ isIntersecting }]) => {
-  chartIsVisible.value = true;
+  chartIsVisible.value = isIntersecting;
 });
 
 // TODO - calculated sparkline is duplicated: BaseCryptoCard.vue
@@ -120,7 +101,7 @@ const orderedSparkLabels = computed(() => {
     </div>
     <div
       class="flex flex-1 w-200 items-center text-black dark:text-white pr-3"
-      :ref="(ref) => (chartElement = ref)"
+      ref="chartElement"
     >
       <template v-if="calculatedSparkline && chartIsVisible">
         <BaseCryptoChart
@@ -138,9 +119,9 @@ const orderedSparkLabels = computed(() => {
     </div>
     <div
       class="flex w-14 items-center justify-center pr-3 cursor-pointer"
-      @click.prevent.stop="toggleFavorite"
+      @click.prevent.stop="toggleFavorite(item.id)"
     >
-      <FavoriteStar :active="isInFavorites" />
+      <FavoriteStar :active="isInFavorites(item.id)" />
     </div>
   </div>
 </template>

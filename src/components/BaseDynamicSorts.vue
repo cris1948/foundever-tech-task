@@ -2,7 +2,7 @@
 import type { BaseDynamicList } from "@/app.organizer";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { sorterCharactere, sorterPrices, sorterSparkline7days } from "@/utils/sorters";
+import { sorterCharacters, sorterPrices, sorterSparkline7days } from "@/utils/sorters";
 import { useCrypto } from "@/composables/useCrypto";
 
 export type TDynamicSort = {
@@ -22,7 +22,7 @@ const { currencyActive } = useCrypto();
 const lastSorter = ref<TDynamicSort>({
   index: "name",
   order: "asc",
-  sorter: sorterCharactere("name"),
+  sorter: sorterCharacters("name"),
 });
 
 const updateSorter = (sortName: string) => {
@@ -30,7 +30,7 @@ const updateSorter = (sortName: string) => {
   let alreadyActiveSorter: boolean = lastSorter.value.index === sortName;
   let order: "asc" | "desc" =
       alreadyActiveSorter && lastSorter.value.order === "asc" ? "desc" : "asc";
-  if ([ "name" ].includes(sortName)) sorter = sorterCharactere(sortName);
+  if ([ "name" ].includes(sortName)) sorter = sorterCharacters(sortName);
   else if ([ "marketCap", "currentPrice", "totalVolume" ].includes(sortName))
     sorter = sorterPrices(currencyActive.value, sortName);
   else if ([ "sparklineIn7d" ].includes(sortName)) sorter = sorterSparkline7days(currencyActive.value, sortName)

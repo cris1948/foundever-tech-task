@@ -1,13 +1,13 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { DashboardHeader } from "@/app.organizer";
 </script>
 
 <template>
   <div
-    class="layout-dashboard flex flex-col min-h-screen dark:bg-gray-900 light:bg-white"
+      class="layout-dashboard flex flex-col min-h-screen dark:bg-gray-900 light:bg-white"
   >
-    <DashboardHeader class="fixed w-screen z-50" />
-    <slot />
+    <DashboardHeader class="fixed w-screen z-50"/>
+    <slot/>
   </div>
 </template>
 

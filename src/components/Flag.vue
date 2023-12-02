@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 type TProps = {
   type: 'en' | 'fr';
@@ -11,20 +11,20 @@ const props = withDefaults(defineProps<TProps>(), {
   isActive: true,
 });
 
-const imageSource = new URL(`../assets/img/flags/${props.type}.png`, import.meta.url).href
+const imageSource = new URL(`../assets/img/flags/${ props.type }.png`, import.meta.url).href
 
 </script>
 
 <template>
   <div
-    class="relative inline-block h-50 h-auto"
-    :style="{ width: props.width }"
+      :style="{ width: props.width }"
+      class="relative inline-block h-50 h-auto"
   >
     <img
-      :class="{ isloading: props.isLoading, active: props.isActive }"
-      class="el-flags"
-      :src="imageSource"
-      style="width: 100%"
+        :class="{ isloading: props.isLoading, active: props.isActive }"
+        :src="imageSource"
+        class="el-flags"
+        style="width: 100%"
     />
   </div>
 </template>

@@ -1,10 +1,9 @@
-<script setup lang="ts">
-import { ref, onMounted, computed, watch, DefineComponent, defineExpose, VNodeRef } from "vue";
-import { useInfiniteScroll } from "@vueuse/core";
+<script lang="ts" setup>
+import { computed, DefineComponent, defineExpose, onMounted, ref, VNodeRef, watch } from "vue";
+import { useInfiniteScroll, useScroll } from "@vueuse/core";
 import { Spinner } from "@/app.organizer";
 import { TDynamicSort } from "./BaseDynamicSorts.vue";
-import { useScroll } from '@vueuse/core'
-import { TCryptoData } from "@/stores/crypto.types";
+import { TCryptoData } from "@/types/crypto.types";
 
 export type TParamsUpdateFilters = {
   ref: string,
@@ -13,7 +12,7 @@ export type TParamsUpdateFilters = {
 };
 
 type TDynamicsFilters = {
-  [ref: string] : {
+  [ref: string]: {
     indexes: string[],
     values: string[],
   }
@@ -47,7 +46,7 @@ const filteredList = computed(() => {
     return Array.from(props.items.values())
   }
   return Array.from(props.items.values()).filter((item, index) => {
-    for (let [ref, { indexes, values }] of filters) {
+    for (let [ ref, { indexes, values } ] of filters) {
       for (let index of indexes) {
         for (let value of values) {
           if (item[index].toLowerCase().includes(value.toLowerCase())) {
@@ -59,17 +58,16 @@ const filteredList = computed(() => {
   })
 })
 
-const optimizedList = computed(() => { 
+const optimizedList = computed(() => {
   return filteredList.value.slice(0, blocCurrent.value * props.itemsByBloc)
 })
 
 const orderedList = computed<TCryptoData[]>(() => {
   try {
-  let ordered = optimizedList.value.sort(dynamicSorter.value.sorter);
-  if (dynamicSorter.value.order === "desc") ordered = ordered.reverse();
-  return ordered;
-  }
-  catch(e) {
+    let ordered = optimizedList.value.sort(dynamicSorter.value.sorter);
+    if (dynamicSorter.value.order === "desc") ordered = ordered.reverse();
+    return ordered;
+  } catch (e) {
     console.warn(e);
     return optimizedList.value
   }
@@ -79,18 +77,18 @@ let timeoutUpdateFilters: NodeJS.Timeout;
 
 
 const onUpdateFilters = ({
-  ref,
-  indexes,
-  values
-}: TParamsUpdateFilters) => {
+                           ref,
+                           indexes,
+                           values
+                         }: TParamsUpdateFilters) => {
   values = values.filter((e) => (e && e !== ''));
   if (values.length) {
     clearTimeout(timeoutUpdateFilters);
     dynamicLoading.value = true;
     timeoutUpdateFilters = setTimeout(() => {
-        blocCurrent.value = 1;
-        dynamicLoading.value = false;
-        dynamicFilters.value[ref] = {
+      blocCurrent.value = 1;
+      dynamicLoading.value = false;
+      dynamicFilters.value[ref] = {
         indexes,
         values,
       };
@@ -102,30 +100,30 @@ const onUpdateSorters = (sorter: TDynamicSort) => {
   dynamicSorter.value = sorter;
 };
 
-const onReset = async() => {
+const onReset = async () => {
   dynamicFilters.value = {} as TDynamicsFilters
   blocCurrent.value = 1;
-  if (scroller.value) scroller.value.scrollTo(0,0);
+  if (scroller.value) scroller.value.scrollTo(0, 0);
 }
 
 watch(
-  [orderedList, dynamicWatcher],
-  ([newOptimizedList], [oldOptimizedList]) => {
-    emit("onRequestNextBloc", {
-      newList: newOptimizedList,
-      oldList: oldOptimizedList,
-    });
-  }
+    [ orderedList, dynamicWatcher ],
+    ([ newOptimizedList ], [ oldOptimizedList ]) => {
+      emit("onRequestNextBloc", {
+        newList: newOptimizedList,
+        oldList: oldOptimizedList,
+      });
+    }
 );
 
 useScroll(scroller, { behavior: 'smooth' })
 
 useInfiniteScroll(
-  scroller,
-  () => {
-    blocCurrent.value++;
-  },
-  { distance: 350 }
+    scroller,
+    () => {
+      blocCurrent.value++;
+    },
+    { distance: 300 }
 );
 
 onMounted(() => {
@@ -142,31 +140,31 @@ defineExpose({
 
 <template>
   <div
-    ref="scroller"
-    class="scroller h-10 overflow-y-scroll flex-auto"
-  > 
+      ref="scroller"
+      class="scroller h-10 overflow-y-scroll flex-auto"
+  >
     <div
-      v-if="!orderedList.length"
-      class="flex flex-1 h-full text-4xl font-bold justify-center items-center"
-      :style="{ color: props.loaderColor }"
+        v-if="!orderedList.length"
+        :style="{ color: props.loaderColor }"
+        class="flex flex-1 h-full text-4xl font-bold justify-center items-center"
     >
-      {{  props.noResultText }}
+      {{ props.noResultText }}
     </div>
-    <Spinner v-else-if="dynamicLoading" :color="props.loaderColor" />
+    <Spinner v-else-if="dynamicLoading" :color="props.loaderColor"/>
     <template v-else>
       <component
-        :is="props.component"
-        v-for="item in orderedList"
-        :key="`${item[props.componentKey]}`"
-        :item="item"
+          :is="props.component"
+          v-for="item in orderedList"
+          :key="`${item[props.componentKey]}`"
+          :item="item"
       />
     </template>
   </div>
 </template>
 
 <style lang="scss">
-  .scroller {
-    scrollbar-color: #687dfa rgba(0,0,0,0.1);
-    scrollbar-width: thin;
-  }
+.scroller {
+  scrollbar-color: #687dfa rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+}
 </style>

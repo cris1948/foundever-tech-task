@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { BaseDynamicList } from "@/app.organizer";
 import { ref } from "vue";
 
@@ -18,7 +18,7 @@ const updateController = (e: Event) => {
       props.controller.onUpdateFilters({
         ref: props.index,
         indexes: props.searchIndexes,
-        values: [value],
+        values: [ value ],
       });
     }
   } catch (e) {
@@ -35,9 +35,11 @@ defineExpose({
 </script>
 
 <template>
-  <input v-model="inputValue" type="text" @input="updateController" />
+  <input v-model="inputValue" type="text" @input="updateController"/>
 </template>
 
 <style lang="scss" scoped>
-  *:focus {outline:0px none transparent;}
+*:focus {
+  outline: 0px none transparent;
+}
 </style>

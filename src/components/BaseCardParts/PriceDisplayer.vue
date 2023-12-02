@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 defineProps({
   label: {
@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-  <span class="text-sm font-bold pr-1" v-if="label">{{ label }}:</span>
+  <span v-if="label" class="text-sm font-bold pr-1">{{ label }}:</span>
   <template v-if="amount">
     <span>{{ amount }}</span>
     {{ currencySymbol }}

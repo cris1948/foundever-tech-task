@@ -1,12 +1,12 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const props = defineProps<{
   index: string;
   default: string;
-  options: 
-    {
-      label: string;
-      value: string;
-    }[]
+  options:
+      {
+        label: string;
+        value: string;
+      }[]
 }>();
 
 const emit = defineEmits<{
@@ -27,10 +27,10 @@ const onChange = (e: Event) => {
 <template>
   <select @change="(event) => onChange(event)">
     <option
-      v-for="(item, i) in props.options"
-      :key="`opt-${i}`"
-      :value="item.value"
-      :selected="item.value === props.default"
+        v-for="(item, i) in props.options"
+        :key="`opt-${i}`"
+        :selected="item.value === props.default"
+        :value="item.value"
     >
       {{ item.label }}
     </option>

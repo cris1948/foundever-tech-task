@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import {computed} from 'vue';
+<script lang="ts" setup>
+import { computed } from 'vue';
 
 type TSizeMode = 'small' | 'medium' | 'big';
 

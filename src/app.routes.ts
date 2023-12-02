@@ -4,8 +4,8 @@ export const ROUTE_CRYPTO_OVERVIEW = {
     name: 'Overview',
     component: () => import('./pages/PageDashboard.vue')
 }
-export const ROUTE_CRYPTO_FAVORITES = { 
-    path: 'favorites', 
+export const ROUTE_CRYPTO_FAVORITES = {
+    path: 'favorites',
     name: 'CryptoFavorites',
     component: () => import('./pages/PageDashboard.vue')
 }

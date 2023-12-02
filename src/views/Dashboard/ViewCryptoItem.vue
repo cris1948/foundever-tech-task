@@ -1,13 +1,11 @@
-<script setup lang="ts">
-import { inject, computed, watch, ref, onMounted } from "vue";
+<script lang="ts" setup>
+import { computed, onMounted, ref, watch } from "vue";
 import { BaseCardCrypto, BaseLoader } from "@/app.organizer";
-import { useCryptoStore } from "@/stores/crypto";
 import { useI18n } from "vue-i18n";
-import { TCryptoData } from "@/stores/crypto.types";
-import { IAppProvider } from "@/providers/app";
-import { storeToRefs } from "pinia";
+import { TCryptoData } from "@/types/crypto.types";
 import { useRouter } from "vue-router";
 import { ROUTE_CRYPTO_OVERVIEW } from "@/app.routes";
+import { useCrypto } from "@/composables/useCrypto";
 
 const router = useRouter();
 
@@ -15,11 +13,7 @@ const id = router.currentRoute.value.params.id as string;
 
 const item = ref<TCryptoData>()
 
-const cryptoStore = useCryptoStore();
-
-const {
-  fetchCryptosInfos
-} = cryptoStore;
+const cryptoStore = useCrypto();
 
 const {
   currencyActive,
@@ -27,15 +21,16 @@ const {
   isReadyCategories,
   isReadyCurrencies,
   isReadyCryptoList,
-} = storeToRefs(cryptoStore);
+  fetchCryptosInfos
+} = cryptoStore;
 
 const isReadyCryptoStore = computed(
-  () => isReadyCategories.value && isReadyCurrencies.value && isReadyCryptoList.value
+    () => isReadyCategories.value && isReadyCurrencies.value && isReadyCryptoList.value
 );
 
-const { t: print }= useI18n();
+const { t: print } = useI18n();
 
-watch(isReadyCryptoStore, (newState) => { 
+watch(isReadyCryptoStore, (newState) => {
   if (newState && id && registerItem()) fetchItemInfos();
 });
 
@@ -46,20 +41,19 @@ watch(currencyActive, (newCrypto) => {
 
 const registerItem = () => {
   const storeItem = cryptoList.value.get(id as string);
-  if (storeItem) { 
+  if (storeItem) {
     item.value = storeItem;
     return true
-  }
-  else {
+  } else {
     router.push({ name: ROUTE_CRYPTO_OVERVIEW.name })
     return false;
   }
 }
-const fetchItemInfos = () => { 
+const fetchItemInfos = () => {
   if (item.value) {
-    fetchCryptosInfos([item.value])
+    fetchCryptosInfos([ item.value ])
   }
-} 
+}
 
 onMounted(() => {
   if (isReadyCryptoStore.value) {
@@ -72,11 +66,11 @@ onMounted(() => {
 
 <template>
   <div v-if="!isReadyCryptoStore || !item" class="flex flex-1 relative">
-    <BaseLoader :text="print('loading_data')" />
-    {{  isReadyCryptoStore ?'tru' :'false' }}
+    <BaseLoader :text="print('loading_data')"/>
+    {{ isReadyCryptoStore ? 'true' : 'false' }}
   </div>
   <div v-else-if="isReadyCryptoStore && item" class="flex flex-1 relative">
-    <BaseCardCrypto :item="item" />
+    <BaseCardCrypto :item="item"/>
   </div>
 </template>
 

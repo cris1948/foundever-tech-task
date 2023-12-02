@@ -1,15 +1,15 @@
-<script setup lang="ts">
-import {IAppProvider} from "@/providers/app";
-import {computed, inject} from "vue";
-import {useCryptoStore} from "@/stores/crypto";
+<script lang="ts" setup>
+import { IAppProvider } from "@/providers/app";
+import { computed, inject } from "vue";
+import { useCrypto } from "@/composables/useCrypto";
 
 const props = defineProps<{ itemId: string; activeLabel?: string; label?: string }>();
 
 const App = inject<IAppProvider>("App");
-const {isInFavorites, toggleFavorite} = useCryptoStore();
+const { isInFavorites, toggleFavorite } = useCrypto();
 
 const active = computed(() => {
-  return isInFavorites(props.itemId)
+  return isInFavorites.value(props.itemId)
 })
 
 const getImageSource = computed(() => {
@@ -20,7 +20,7 @@ const getImageSource = computed(() => {
       file +=
           App?.theme.value === "dark" ? "empty-dark" : "empty-light";
     }
-    return new URL(`../assets/img/${file}.png`, import.meta.url).href;
+    return new URL(`../assets/img/${ file }.png`, import.meta.url).href;
   } catch (e) {
     console.warn(e);
   }
@@ -32,8 +32,8 @@ const getImageSource = computed(() => {
     <img :src="getImageSource" class="w-6 h-6 inline-block cursor-pointer"/>
     <span
         v-if="activeLabel && label"
-        class="pl-1 text-xs cursor-pointer"
         :class="[(active ? 'text-gray-400 capitalize' : 'hover:underline')]"
+        class="pl-1 text-xs cursor-pointer"
     >
       {{ active ? props.activeLabel : props.label }}
     </span>

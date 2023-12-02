@@ -1,16 +1,10 @@
-<script setup lang="ts">
-import {computed, PropType, ref} from "vue";
-import {storeToRefs} from "pinia";
-import {TCryptoData} from "@/stores/crypto.types";
-import {useCryptoStore} from "@/stores/crypto";
-import {
-  BaseCryptoChart,
-  BaseSelectFilter,
-  FavoriteStar,
-  Spinner,
-} from "@/app.organizer";
+<script lang="ts" setup>
+import { computed, PropType, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { TCryptoData } from "@/types/crypto.types";
+import { BaseCryptoChart, BaseSelectFilter, FavoriteStar, Spinner, } from "@/app.organizer";
+import { useCrypto } from "@/composables/useCrypto";
 import useCurrencySymbol from "@/composables/useCurrencySymbol";
-import {useI18n} from "vue-i18n";
 import PriceDisplayer from "@/components/BaseCardParts/PriceDisplayer.vue";
 
 
@@ -21,17 +15,12 @@ const props = defineProps({
   }
 });
 
-const cryptoStore = useCryptoStore();
-
-const {currencyActive, currenciesList} =
-    storeToRefs(cryptoStore);
-
-const { setCurrencyActive } = cryptoStore;
+const { currencyActive, currenciesList, setCurrencyActive } = useCrypto();
 
 const currencySymbol = computed(() => useCurrencySymbol(currencyActive.value));
 const chartElement = ref();
 
-const {t: print} = useI18n();
+const { t: print } = useI18n();
 
 const currenciesListOptions = computed(() => {
   return currenciesList.value.map((c) => {
@@ -54,18 +43,16 @@ const currenciesListOptions = computed(() => {
         />
         <Spinner
             v-else
+            class="inline-block mx-auto"
             color="#DDD"
             size="small"
-            class="inline-block mx-auto"
         />
       </div>
       <div
           class="col-span-8 grid grid-cols-1 lg:grid-cols-10 items-center gradient mt-4 lg:mt-0 a-05 fadeInDown rounded-r"
       >
-        <!--         TODO - inline styles-->
         <div
             class="flex col-span-10 lg:col-span-2 justify-center lg:justify-start items-center lg:p-2 lg:pr-4 font-bold text-5xl stroke-black a-1 d-600 fadeIn"
-            style="text-stroke: 2px white;"
         >
           {{
             item.name.length > 35
@@ -80,54 +67,54 @@ const currenciesListOptions = computed(() => {
         <div class="flex flex-col col-span-10 lg:col-span-3 justify-center lg:justify-start  pl-4 pr-4 text-black">
           <div class="inline text-center lg:text-left">
             <PriceDisplayer
+                :amount="item.pricesByCurrencies[currencyActive]?.currentPrice || 0"
+                :currency-symbol="currencySymbol"
                 :label="print('current_price')"
-                :amount="item.pricesByCurrencies[currencyActive]?.current_price || 0"
-                :currency-symbol="currencySymbol"
             />
           </div>
           <div class="inline text-center lg:text-left">
             <PriceDisplayer
+                :amount="item.pricesByCurrencies[currencyActive]?.marketCap || 0"
+                :currency-symbol="currencySymbol"
                 :label="print('market_cap')"
-                :amount="item.pricesByCurrencies[currencyActive]?.market_cap || 0"
-                :currency-symbol="currencySymbol"
             />
           </div>
           <div class="inline text-center lg:text-left">
             <PriceDisplayer
-                :label="print('total_volume')"
-                :amount="item.pricesByCurrencies[currencyActive]?.total_volume || 0"
+                :amount="item.pricesByCurrencies[currencyActive]?.totalVolume || 0"
                 :currency-symbol="currencySymbol"
+                :label="print('total_volume')"
             />
           </div>
         </div>
         <div class="flex items-center justify-center lg:justify-start">
           <BaseSelectFilter
-              index="currency"
               :default="currencyActive"
               :options="currenciesListOptions"
-              @onChange="setCurrencyActive"
               class="lg:rounded-r-full rounded-full h-10 mt-2 mb-2 lg:mt-0 lg:mb-0 shadow uppercase font-bold pl-3 a-08 d-500 fadeInDown"
+              index="currency"
+              @onChange="setCurrencyActive"
           />
         </div>
         <div
             class="flex col-span-10 lg:col-span-2 items-center justify-center lg:justify-end pb-4 lg:pr-3 lg:pr-10"
         >
           <div class="flex items-center">
-            <FavoriteStar :itemId="item.id" :activeLabel="print('favorite')" :label="print('add_to_favorites')"
+            <FavoriteStar :activeLabel="print('favorite')" :itemId="item.id" :label="print('add_to_favorites')"
                           class="pr"/>
           </div>
         </div>
       </div>
     </div>
     <div
-        class="flex flex-1 w-200 items-center text-black dark:text-white lg:pr-3 mt-10"
         ref="chartElement"
+        class="flex flex-1 w-200 items-center text-black dark:text-white lg:pr-3 mt-10"
     >
       <template v-if="item.calculatedSparkline">
         <BaseCryptoChart
-            :sparkline="item.calculatedSparkline"
-            :labels="item.orderedSparkLabels"
             :animation="true"
+            :labels="item.orderedSparkLabels"
+            :sparkline="item.calculatedSparkline"
             :tooltip="true"
             :win="
             item.calculatedSparkline[0] <

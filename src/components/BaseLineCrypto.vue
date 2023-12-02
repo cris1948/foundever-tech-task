@@ -31,7 +31,7 @@ useIntersectionObserver(chartElement, ([ { isIntersecting } ]) => {
   <div
       class="line-crypto w-100 block flex flex-1 h-16 mb-1 cursor-pointer"
       @click="
-      (event) =>
+      () =>
         $router.push({
           name: ROUTE_CRYPTO_VIEW.name,
           params: { id: item.id },
@@ -40,6 +40,7 @@ useIntersectionObserver(chartElement, ([ { isIntersecting } ]) => {
   >
     <div class="flex w-20 pl-2 pr-2 items-center">
       <img
+          alt="crypto logo"
           v-if="item.image"
           v-lazy="item.image"
           class="w-8 h-8 border-round rounded-full"

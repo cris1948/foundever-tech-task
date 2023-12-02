@@ -3,8 +3,8 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useMeta } from "vue-meta";
 import { useI18n } from "vue-i18n";
-import { BaseLineCrypto, LayoutDashboard, ViewCryptoList } from "../app.organizer";
-import { ROUTE_CRYPTO_FAVORITES, ROUTE_CRYPTO_OVERVIEW } from "../app.routes";
+import { BaseLineCrypto, LayoutDashboard, ViewCryptoList } from "@/app.organizer";
+import { ROUTE_CRYPTO_FAVORITES, ROUTE_CRYPTO_OVERVIEW } from "@/app.routes";
 import { useCrypto } from "@/composables/useCrypto";
 
 useMeta({

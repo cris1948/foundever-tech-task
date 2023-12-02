@@ -2,13 +2,12 @@
 import { useRouter } from "vue-router";
 import { ROUTE_CRYPTO_OVERVIEW } from "@/app.routes";
 import { computed } from "vue";
-import { LayoutDashboard } from "../app.organizer";
+import { LayoutDashboard } from "@/app.organizer";
 
 const router = useRouter();
 
 const haveHistoryNavigation = computed(() => {
-  if (window.history.state === null) return false;
-  return true;
+  return window.history.state !== null;
 })
 
 const goBackHistory = () => {
@@ -29,9 +28,8 @@ const goBackHistory = () => {
       </router-link>
       <template v-if="haveHistoryNavigation">
         <div
-            :to="{ name: ROUTE_CRYPTO_OVERVIEW.name }"
             class="mt-5 text-gray-400 dark:text-gray-600 text-xs underline"
-            @click="(event) => goBackHistory()"
+            @click="goBackHistory()"
         >
           Or click where to go back in your router history
         </div>

@@ -45,8 +45,8 @@ const filteredList = computed(() => {
   if (!filters.length) {
     return Array.from(props.items.values())
   }
-  return Array.from(props.items.values()).filter((item, index) => {
-    for (let [ ref, { indexes, values } ] of filters) {
+  return Array.from(props.items.values()).filter((item) => {
+    for (let [ _, { indexes, values } ] of filters) {
       for (let index of indexes) {
         for (let value of values) {
           if (item[index].toLowerCase().includes(value.toLowerCase())) {
@@ -103,7 +103,9 @@ const onUpdateSorters = (sorter: TDynamicSort) => {
 const onReset = async () => {
   dynamicFilters.value = {} as TDynamicsFilters
   blocCurrent.value = 1;
-  if (scroller.value) scroller.value.scrollTo(0, 0);
+  if (scroller.value) {
+    scroller.value?.scrollTo(0, 0);
+  };
 }
 
 watch(

@@ -37,6 +37,7 @@ const currenciesListOptions = computed(() => {
     <div class="flex grid grid-cols-1 lg:grid-cols-10 w-full">
       <div class="image flex col-span-2 pl-2 pr-2 items-center a-1 justify-center fadeInLeft">
         <img
+            alt="crypto logo"
             v-if="item.image"
             v-lazy="item.image"
             class="w-150 h-150 border-round rounded-full"

@@ -29,7 +29,7 @@ const getImageSource = computed(() => {
 
 <template>
   <div @click.prevent.stop="toggleFavorite(props.itemId)">
-    <img :src="getImageSource" class="w-6 h-6 inline-block cursor-pointer"/>
+    <img :src="getImageSource" class="w-6 h-6 inline-block cursor-pointer" alt="star favourite sentence"/>
     <span
         v-if="activeLabel && label"
         :class="[(active ? 'text-gray-400 capitalize' : 'hover:underline')]"

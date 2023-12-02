@@ -23,6 +23,15 @@ export type TEntryCryptoData = {
     },
 }
 
+export type PricesAttrs = {
+    currentPrice: number
+    marketCap: number,
+    totalVolume: number,
+    priceChange24h: number,
+}
+
+export type PricesByCurrencies = Record<string, PricesAttrs>
+
 export type TCryptoData = {
     id: string
     name: string
@@ -32,14 +41,7 @@ export type TCryptoData = {
     sparklineIn7d?: number[];
     calculatedSparkline?: false | number[],
     orderedSparkLabels?: string[],
-    pricesByCurrencies: {
-        [key: string]: {
-            currentPrice: number
-            marketCap: number,
-            totalVolume: number,
-            priceChange24h: number,
-        }
-    }
+    pricesByCurrencies: PricesByCurrencies
 }
 
 export type TEntryCategoryData = {

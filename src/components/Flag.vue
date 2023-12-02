@@ -21,6 +21,7 @@ const imageSource = new URL(`../assets/img/flags/${ props.type }.png`, import.me
       class="relative inline-block h-50 h-auto"
   >
     <img
+        :alt="`flag ${props.type}`"
         :class="{ isloading: props.isLoading, active: props.isActive }"
         :src="imageSource"
         class="el-flags"

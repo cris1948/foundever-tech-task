@@ -34,7 +34,7 @@ watch(isReadyCryptoStore, (newState) => {
   if (newState && id && registerItem()) fetchItemInfos();
 });
 
-watch(currencyActive, (newCrypto) => {
+watch(currencyActive, () => {
   fetchItemInfos()
 })
 
@@ -51,7 +51,7 @@ const registerItem = () => {
 }
 const fetchItemInfos = () => {
   if (item.value) {
-    fetchCryptosInfos([ item.value ])
+    fetchCryptosInfos([ item.value as TCryptoData ])
   }
 }
 

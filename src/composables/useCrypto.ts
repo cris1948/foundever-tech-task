@@ -1,4 +1,4 @@
-import { TCryptoData, TEntryCategoryData, TEntryCryptoData } from "@/types/crypto.types";
+import { PricesByCurrencies, TCryptoData, TEntryCategoryData, TEntryCryptoData } from "@/types/crypto.types";
 import useLocalStorage from "@/composables/useLocalStorage";
 import { LOCALSTORAGE_CRYPTO_CURRENCY, LOCALSTORAGE_CRYPTO_FAVORITES } from "@/app.storages";
 import { computed, ref } from "vue";
@@ -110,7 +110,7 @@ export function useCrypto() {
         if (!isReadyCryptoList.value) {
             const cacheCryptoList = useLocalStorage.get("temp_crypto");
             if (cacheCryptoList && Object.entries(cacheCryptoList).length) {
-                cacheCryptoList.forEach(([ index, e ]: [ index: string, e: TCryptoData ]) => {
+                cacheCryptoList.forEach(([ _, e ]: [ index: string, e: TCryptoData ]) => {
                     cryptoList.value.set(e.id, { ...e, pricesByCurrencies: {} });
                 });
                 return
@@ -140,7 +140,7 @@ export function useCrypto() {
                 include_24hr_change: true,
                 include_last_updated_at: true,
                 sparkline: true,
-                x_cg_demo_api_key: "CG-tZ24564qzng8dTFMHKCA1bWG"
+                x_cg_demo_api_key: "CG-tZ24564qzng8dTFMHKCA1bWG" // @note: dev only :)
             };
 
             const response = await axios.get(`${ URL_API }/coins/markets`, {

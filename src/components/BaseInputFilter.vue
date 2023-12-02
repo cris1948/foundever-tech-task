@@ -40,6 +40,6 @@ defineExpose({
 
 <style lang="scss" scoped>
 *:focus {
-  outline: 0px none transparent;
+  outline: 0 none transparent;
 }
 </style>
